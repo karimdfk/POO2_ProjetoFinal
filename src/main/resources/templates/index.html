@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+    <title>Document</title>
+
+    <style>
+        * {
+            padding: 0px;
+            margin: 0px;
+        }
+
+        body {
+            font-family: arial;
+            color: white;
+        }
+
+        nav {
+            background-color: #666666e1;
+            width: 350px;
+            height: 100%;
+            position: absolute;
+        }
+
+        ul {
+            top: 70px;
+            position: absolute;
+            width: 100%;
+            padding: 0;
+            margin: 0;
+        }
+
+
+        li {
+            display: block;
+            padding: 20px 20px;
+            color: white;
+            margin: 10px 0px;
+        }
+
+        li:hover {
+            background-color: lightgray;
+            color: black;
+        }
+
+        td{
+            color: white;
+        }
+
+        th{
+            color: lightgray;
+        }
+
+        #divTarefas {
+            background-color: #666666e1;
+            position: absolute;
+            left: 28%;
+            height: 100%;
+        }
+
+        p {
+            margin: 0;
+        }
+
+        .btnCat {
+            border: none;
+            background-color: #66666600;
+            color: white;
+        }
+
+        span{
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+
+
+    <nav>
+        <h2>Categorias</h2>
+        <ul>
+            <li><button class="btnCat">Todas</button></li>
+            <li th:each="categoria:${categoriaList}">
+                <button class="btnCat" th:text="${categoria.nome}"></button></li>
+        </ul>
+    </nav>
+
+    <div>
+        <span th:each="usuario:${usuarioList}" th:text="${usuario.texto}">
+
+        </span>
+    </div>
+
+
+    <div id="divTarefas" class="container" style="width: 70%;">
+
+        <h2>Tarefas</h2>
+
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Nome</th>
+                <th scope="col">Descrição</th>
+                <th scope="col">Categoria</th>
+                <th scope="col">Data fim</th>
+                <th scope="col">Estado</th>
+                <th scope="col">Ações</th>
+            </tr>
+            </thead>
+
+            <tbody>
+                <tr class="linhaTabela" th:each="tarefa:${tarefaList}">
+                    <th scope="row" th:text="${tarefa.id}"></th>
+                    <td th:text="${tarefa.nome}"></td>
+                    <td th:text="${tarefa.descricao}"></td>
+                    <td class="CategoriaTarefa" th:text="${tarefa.categoria.nome}"></td>
+                    <td th:text="${#temporals.format(tarefa.fim, 'dd/MM/yyyy')}"></td>
+                    <td th:text="${tarefa.estado}"></td>
+                    <td>
+                        <a th:href="@{/edit/{id}(id=${tarefa.id})}">
+                            <i class="fas fa-edit"></i>
+                        </a>
+
+                        <a th:href="@{/delete/{id}(id=${tarefa.id})}">
+                            <i class="fas fa-eraser"></i>
+                        </a>
+
+                        <a th:href="@{/estado/{id}(id=${tarefa.id})}">
+                            <i class="fa-thin fa-check"></i>
+                        </a>
+
+
+                    </td>
+                </tr>
+            </tbody>
+
+        </table>
+
+        <a th:href="@{/tarefa/form/add}">
+            <button class="btn btn-primary">
+                Criar Tarefa
+            </button>
+        </a>
+    </div>
+
+
+    <script>
+        window.onload = function () {
+
+            //Parte para tratar o click dos botoes categoria
+
+            var botoes = document.querySelectorAll('.btnCat');// Seleciona todos os botões com a classe "btnCat"
+
+            botoes.forEach(function(botao) {// Percorre os elementos da variavel botoes
+                var nomeCategoria = botao.textContent;// Obtém o nome da categoria a partir do texto do botão
+
+                botao.addEventListener('click', function() {// Atribui um evento de clique a cada botão
+                    trataCategoria(nomeCategoria);// Chama a função com o nome da categoria como parâmetro
+                });
+            });
+
+            //fim dessa parte
+
+            //Parte do span usado para mostrar o funcionamento do Observer
+
+            const meuSpan = document.querySelector("span");// Seleciona o span presente no html
+            window.alert(meuSpan.textContent);//Envia um alerta ao usuário com o texto do span
+
+            //fim dessa parte
+
+        }
+
+        function trataCategoria(categoria) {
+            var linhas = document.querySelectorAll('.linhaTabela');// Seleciona todas as linhas da tabela de Tarefas"
+
+            linhas.forEach(function(linha) {// Percorre os elementos da variavel botoes
+                var nomeCategoria = linha.querySelector('.CategoriaTarefa').textContent; // Obtém o nome da categoria a partir da linha
+
+                if (categoria == "Todas"){
+                    location.reload();// Recarrega a pagina com o intuito de mostrar todas as tarefas novamente
+                }
+                else if(nomeCategoria == categoria){
+                    linha.style.display = "table-row";// Mostra as Tarefas com a categoria selecionada
+                }
+                else{
+                    linha.style.display = "none";// Oculta as outras tarefas
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>

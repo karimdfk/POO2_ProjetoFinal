@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+    <title>Document</title>
+
+    <style>
+        body{
+            background-color: lightgray;
+        }
+
+        form{
+            background-color: white;
+            border-radius: 10px;
+            margin-top: 50px;
+        }
+
+        button{
+            margin-top: 15px;
+        }
+    </style>
+</head>
+
+<body>
+    <div th:if="${mensagem}" th:text="${mensagem}"> </div>
+
+    <form action="/tarefa/form/save" method="post" class="container">
+
+        <div th:if="${tarefa}" class="row">
+            <input type="text" readonly class="form-control" id="id" name="id" th:value="${tarefa?.id}">
+        </div>
+
+        <div class="row">
+            <label for="nome" class="form-label">Nome:</label>
+            <input type="text" class="form-control" id="nome" name="nome" th:value="${tarefa?.nome}"/>
+        </div>
+
+        <div class="row">
+            <label for="descricao" class="form-label">Descricao:</label>
+            <input type="text" class="form-control" id="descricao" name="descricao" th:value="${tarefa?.descricao}"/>
+        </div>
+
+        <div class="row">
+            <label for="fim" class="form-label">Fim:</label>
+            <input type="date" class="form-control" id="fim" name="fim" th:value="${tarefa?.fim}"/>
+        </div>
+
+        <div class="row">
+            <label for="categoria" class="form-label">Fim:</label>
+
+            <select name="categoria" id="categoria" class="form-select">
+                <option th:each="categoria:${categoriaList}"
+                        th:value="${categoria.id}"
+                        th:text="${categoria.nome}"
+                        th:selected="${categoria?.id == tarefa?.categoria?.id}">
+                </option>
+            </select>
+        </div>
+
+
+        <input type="date" id="criacao" name="criacao" style="display: none;" th:value="${#dates.format(#dates.createNow(), 'dd/MM/yyyy')}"/>
+
+        <input type="number" id="usuario" name="usuario" style="display: none;" th:value="2"/>
+
+        <input type="text" id="estado" name="estado" style="display: none;" th:value="Pendente"/>
+
+
+
+        <button class="btn btn-primary">Criar Tarefa</button>
+    </form>
+
+</body>
+</html>
